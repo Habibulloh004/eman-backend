@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"eman-backend/services"
+	"errors"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -16,19 +17,16 @@ func NewUploadHandler(storage *services.StorageService) *UploadHandler {
 
 // Upload handles single file upload
 func (h *UploadHandler) Upload(c *fiber.Ctx) error {
-	file, err := c.FormFile("file")
+	relativePath, err := uploadFromRequest(c, h.storage)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "No file uploaded",
-		})
-	}
+		message := err.Error()
+		if errors.Is(err, errNoFileUploaded) {
+			message = "No file uploaded"
+		}
 
-	relativePath, err := h.storage.UploadFile(file)
-	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": err.Error(),
+			"message": message,
 		})
 	}
 

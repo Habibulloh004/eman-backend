@@ -2,10 +2,14 @@ package handlers
 
 import (
 	"eman-backend/config"
+	"eman-backend/database"
+	"eman-backend/models"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthHandler struct {
@@ -19,6 +23,12 @@ func NewAuthHandler(cfg *config.Config) *AuthHandler {
 type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+}
+
+type ChangePasswordRequest struct {
+	CurrentPassword string `json:"current_password"`
+	NewPassword     string `json:"new_password"`
+	ConfirmPassword string `json:"confirm_password"`
 }
 
 type LoginResponse struct {
@@ -41,8 +51,23 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	// Validate credentials against config
-	if req.Username != h.cfg.AdminUsername || req.Password != h.cfg.AdminPassword {
+	req.Username = strings.TrimSpace(req.Username)
+	if req.Username == "" || req.Password == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "Username and password are required",
+		})
+	}
+
+	// Validate credentials against database
+	var admin models.AdminUser
+	if err := database.DB.Where("username = ?", req.Username).First(&admin).Error; err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error":   true,
+			"message": "Invalid credentials",
+		})
+	}
+	if err := bcrypt.CompareHashAndPassword([]byte(admin.PasswordHash), []byte(req.Password)); err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
 			"message": "Invalid credentials",
@@ -52,7 +77,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	// Generate JWT token
 	expiresAt := time.Now().Add(time.Duration(h.cfg.JWTExpiry) * time.Minute)
 	claims := Claims{
-		Username: req.Username,
+		Username: admin.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expiresAt),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -72,7 +97,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	// Generate refresh token
 	refreshExpiresAt := time.Now().Add(time.Duration(h.cfg.RefreshExpiry) * time.Minute)
 	refreshClaims := Claims{
-		Username: req.Username,
+		Username: admin.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(refreshExpiresAt),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -103,6 +128,90 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	return c.JSON(LoginResponse{
 		Token:     tokenString,
 		ExpiresAt: expiresAt.Unix(),
+	})
+}
+
+// ChangePassword updates admin password (protected)
+func (h *AuthHandler) ChangePassword(c *fiber.Ctx) error {
+	var req ChangePasswordRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "Invalid request body",
+		})
+	}
+
+	if req.CurrentPassword == "" || req.NewPassword == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "Current and new password are required",
+		})
+	}
+	if len(req.NewPassword) < 8 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "New password must be at least 8 characters",
+		})
+	}
+	if req.ConfirmPassword != "" && req.ConfirmPassword != req.NewPassword {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "Password confirmation does not match",
+		})
+	}
+
+	username, ok := c.Locals("username").(string)
+	if !ok || strings.TrimSpace(username) == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error":   true,
+			"message": "Not authenticated",
+		})
+	}
+
+	var admin models.AdminUser
+	if err := database.DB.Where("username = ?", username).First(&admin).Error; err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error":   true,
+			"message": "Not authenticated",
+		})
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(admin.PasswordHash), []byte(req.CurrentPassword)); err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error":   true,
+			"message": "Current password is incorrect",
+		})
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(admin.PasswordHash), []byte(req.NewPassword)); err == nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "New password must be different from current password",
+		})
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": "Failed to update password",
+		})
+	}
+
+	now := time.Now()
+	if err := database.DB.Model(&admin).Updates(map[string]interface{}{
+		"password_hash":       string(hash),
+		"password_changed_at": &now,
+	}).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": "Failed to update password",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"success": true,
+		"message": "Password updated",
 	})
 }
 

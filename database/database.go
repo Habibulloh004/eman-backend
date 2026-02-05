@@ -32,6 +32,7 @@ func Connect(dsn string) error {
 
 func Migrate() error {
 	err := DB.AutoMigrate(
+		&models.AdminUser{},
 		&models.GalleryItem{},
 		&models.MapIconType{},
 		&models.MapIcon{},

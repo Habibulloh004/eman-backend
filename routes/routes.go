@@ -69,6 +69,7 @@ func Setup(app *fiber.App, cfg *config.Config) {
 
 	// Auth - me
 	admin.Get("/me", authHandler.Me)
+	admin.Post("/password", authHandler.ChangePassword)
 
 	// Gallery management
 	adminGallery := admin.Group("/gallery")

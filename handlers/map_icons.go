@@ -4,6 +4,7 @@ import (
 	"eman-backend/database"
 	"eman-backend/models"
 	"eman-backend/services"
+	"errors"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -221,19 +222,16 @@ func (h *MapIconTypeHandler) Delete(c *fiber.Ctx) error {
 
 // Upload handles icon upload
 func (h *MapIconTypeHandler) Upload(c *fiber.Ctx) error {
-	file, err := c.FormFile("file")
+	relativePath, err := uploadFromRequest(c, h.storage)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"message": "No file uploaded",
-		})
-	}
+		message := err.Error()
+		if errors.Is(err, errNoFileUploaded) {
+			message = "No file uploaded"
+		}
 
-	relativePath, err := h.storage.UploadFile(file)
-	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": err.Error(),
+			"message": message,
 		})
 	}
 

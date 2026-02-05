@@ -20,13 +20,18 @@ type Config struct {
 	JWTExpiry     int // minutes
 	RefreshExpiry int // minutes
 
-	// Admin credentials (single admin)
+	// Admin credentials (used for initial seed)
 	AdminUsername string
 	AdminPassword string
 
 	// File uploads
 	UploadDir       string
 	MaxUploadSizeMB int
+
+	// Image processing
+	WebPQuality  int
+	WebPLossless bool
+	WebPExact    bool
 }
 
 func Load() *Config {
@@ -72,6 +77,11 @@ func Load() *Config {
 		// File uploads
 		UploadDir:       getEnv("UPLOAD_DIR", "./uploads"),
 		MaxUploadSizeMB: getEnvInt("MAX_UPLOAD_SIZE_MB", 200),
+
+		// Image processing
+		WebPQuality:  getEnvInt("WEBP_QUALITY", 85),
+		WebPLossless: getEnvBool("WEBP_LOSSLESS", false),
+		WebPExact:    getEnvBool("WEBP_EXACT", false),
 	}
 }
 
@@ -94,6 +104,15 @@ func getEnvFirst(keys ...string) string {
 func getEnvInt(key string, defaultValue int) int {
 	if value := os.Getenv(key); value != "" {
 		if parsed, err := strconv.Atoi(value); err == nil {
+			return parsed
+		}
+	}
+	return defaultValue
+}
+
+func getEnvBool(key string, defaultValue bool) bool {
+	if value := os.Getenv(key); value != "" {
+		if parsed, err := strconv.ParseBool(value); err == nil {
 			return parsed
 		}
 	}
