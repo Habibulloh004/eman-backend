@@ -129,6 +129,11 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	// Serve uploaded files with byte-range support for large media
 	app.Static("/uploads", cfg.UploadDir, fiber.Static{
 		ByteRange: true,
+		MaxAge:    31536000,
+		ModifyResponse: func(c *fiber.Ctx) error {
+			c.Set("Cache-Control", "public, max-age=31536000, immutable")
+			return nil
+		},
 	})
 
 	// ============ WEBSOCKET ============
