@@ -104,6 +104,7 @@ type CreateGalleryRequest struct {
 	DescriptionUz string `json:"description_uz"`
 	Type          string `json:"type"`
 	URL           string `json:"url"`
+	RedirectURL   string `json:"redirect_url"`
 	Thumbnail     string `json:"thumbnail"`
 	Category      string `json:"category"`
 	SortOrder     int    `json:"sort_order"`
@@ -127,6 +128,7 @@ func (h *GalleryHandler) Create(c *fiber.Ctx) error {
 		DescriptionUz: req.DescriptionUz,
 		Type:          req.Type,
 		URL:           req.URL,
+		RedirectURL:   req.RedirectURL,
 		Thumbnail:     req.Thumbnail,
 		Category:      req.Category,
 		SortOrder:     req.SortOrder,
@@ -175,6 +177,7 @@ func (h *GalleryHandler) Update(c *fiber.Ctx) error {
 	item.DescriptionUz = req.DescriptionUz
 	item.Type = req.Type
 	item.URL = req.URL
+	item.RedirectURL = req.RedirectURL
 	item.Thumbnail = req.Thumbnail
 	item.Category = req.Category
 	item.SortOrder = req.SortOrder

@@ -14,6 +14,7 @@ type GalleryItem struct {
 	DescriptionUz string       `json:"description_uz"`
 	Type        string         `json:"type"` // image, video
 	URL         string         `json:"url"`
+	RedirectURL string         `json:"redirect_url"`
 	Thumbnail   string         `json:"thumbnail"` // for videos
 	Category    string         `json:"category"`  // construction, interior, exterior
 	SortOrder   int            `json:"sort_order"`
