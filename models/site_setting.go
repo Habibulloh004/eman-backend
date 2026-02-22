@@ -113,6 +113,8 @@ func DefaultSettings() []SiteSetting {
 		{Key: "map_embed_url", Value: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d47980.98675893856!2d69.21992457431642!3d41.31147339999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8b0cc379e9c3%3A0xa5a9323b4aa5cb98!2sTashkent%2C%20Uzbekistan!5e0!3m2!1sen!2s!4v1703955000000!5m2!1sen!2s", Type: TypeString, Category: CategoryContent, Label: "Google Maps URL", LabelUz: "Google Maps URL"},
 		{Key: "map_coordinates", Value: "41.3111,69.2401", Type: TypeString, Category: CategoryContent, Label: "Координаты карты", LabelUz: "Xarita koordinatalari"},
 		{Key: "map_zoom", Value: "14", Type: TypeNumber, Category: CategoryContent, Label: "Масштаб карты", LabelUz: "Xarita masshtabi"},
+		{Key: "background_music_url", Value: "", Type: TypeString, Category: CategoryContent, Label: "Фоновая музыка (URL)", LabelUz: "Fon musiqa URL"},
+		{Key: "brochure_file_url", Value: "", Type: TypeString, Category: CategoryContent, Label: "Файл буклета", LabelUz: "Buklet fayli"},
 
 		// Projects/Features settings (JSON) - 3 default features
 		{Key: "projects", Value: `[

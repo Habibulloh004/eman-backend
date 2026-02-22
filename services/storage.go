@@ -41,21 +41,70 @@ var AllowedExtensions = map[string]bool{
 	".mp4":  true,
 	".webm": true,
 	".mov":  true,
+	".mp3":  true,
+	".wav":  true,
+	".ogg":  true,
+	".m4a":  true,
+	".aac":  true,
+	".pdf":  true,
+	".doc":  true,
+	".docx": true,
+	".xls":  true,
+	".xlsx": true,
+	".ppt":  true,
+	".pptx": true,
+	".txt":  true,
+	".rtf":  true,
+	".csv":  true,
+	".odt":  true,
+	".ods":  true,
+	".odp":  true,
+	".zip":  true,
+	".rar":  true,
+	".7z":   true,
 }
 
 var AllowedMimeTypes = map[string]bool{
-	"image/jpeg":       true,
-	"image/jpg":        true,
-	"image/png":        true,
-	"image/gif":        true,
-	"image/webp":       true,
-	"image/bmp":        true,
-	"image/tiff":       true,
-	"video/mp4":        true,
-	"video/webm":       true,
-	"video/quicktime":  true,
-	"application/mp4":  true,
-	"application/webm": true,
+	"image/jpeg":         true,
+	"image/jpg":          true,
+	"image/png":          true,
+	"image/gif":          true,
+	"image/webp":         true,
+	"image/bmp":          true,
+	"image/tiff":         true,
+	"video/mp4":          true,
+	"video/webm":         true,
+	"video/quicktime":    true,
+	"application/mp4":    true,
+	"application/webm":   true,
+	"audio/mpeg":         true,
+	"audio/mp3":          true,
+	"audio/wav":          true,
+	"audio/x-wav":        true,
+	"audio/wave":         true,
+	"audio/ogg":          true,
+	"audio/mp4":          true,
+	"audio/x-m4a":        true,
+	"audio/aac":          true,
+	"application/pdf":    true,
+	"application/msword": true,
+	"application/vnd.openxmlformats-officedocument.wordprocessingml.document": true,
+	"application/vnd.ms-excel": true,
+	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":         true,
+	"application/vnd.ms-powerpoint":                                             true,
+	"application/vnd.openxmlformats-officedocument.presentationml.presentation": true,
+	"text/plain":      true,
+	"text/csv":        true,
+	"text/rtf":        true,
+	"application/rtf": true,
+	"application/vnd.oasis.opendocument.text":         true,
+	"application/vnd.oasis.opendocument.spreadsheet":  true,
+	"application/vnd.oasis.opendocument.presentation": true,
+	"application/zip":              true,
+	"application/x-zip-compressed": true,
+	"application/vnd.rar":          true,
+	"application/x-rar-compressed": true,
+	"application/x-7z-compressed":  true,
 }
 
 var ConvertibleToWebP = map[string]bool{
@@ -269,6 +318,48 @@ func extensionFromContentType(contentType string) string {
 		return ".webm"
 	case "video/quicktime":
 		return ".mov"
+	case "audio/mpeg", "audio/mp3":
+		return ".mp3"
+	case "audio/wav", "audio/x-wav", "audio/wave":
+		return ".wav"
+	case "audio/ogg":
+		return ".ogg"
+	case "audio/mp4", "audio/x-m4a":
+		return ".m4a"
+	case "audio/aac":
+		return ".aac"
+	case "application/pdf":
+		return ".pdf"
+	case "application/msword":
+		return ".doc"
+	case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+		return ".docx"
+	case "application/vnd.ms-excel":
+		return ".xls"
+	case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+		return ".xlsx"
+	case "application/vnd.ms-powerpoint":
+		return ".ppt"
+	case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+		return ".pptx"
+	case "text/plain":
+		return ".txt"
+	case "text/csv":
+		return ".csv"
+	case "text/rtf", "application/rtf":
+		return ".rtf"
+	case "application/vnd.oasis.opendocument.text":
+		return ".odt"
+	case "application/vnd.oasis.opendocument.spreadsheet":
+		return ".ods"
+	case "application/vnd.oasis.opendocument.presentation":
+		return ".odp"
+	case "application/zip", "application/x-zip-compressed":
+		return ".zip"
+	case "application/vnd.rar", "application/x-rar-compressed":
+		return ".rar"
+	case "application/x-7z-compressed":
+		return ".7z"
 	default:
 		return ""
 	}
