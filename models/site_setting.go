@@ -115,6 +115,7 @@ func DefaultSettings() []SiteSetting {
 		{Key: "map_zoom", Value: "14", Type: TypeNumber, Category: CategoryContent, Label: "Масштаб карты", LabelUz: "Xarita masshtabi"},
 		{Key: "background_music_url", Value: "", Type: TypeString, Category: CategoryContent, Label: "Фоновая музыка (URL)", LabelUz: "Fon musiqa URL"},
 		{Key: "brochure_file_url", Value: "", Type: TypeString, Category: CategoryContent, Label: "Файл буклета", LabelUz: "Buklet fayli"},
+		{Key: "brochure_file_name", Value: "", Type: TypeString, Category: CategoryContent, Label: "Имя файла буклета", LabelUz: "Buklet fayl nomi"},
 
 		// Projects/Features settings (JSON) - 3 default features
 		{Key: "projects", Value: `[
