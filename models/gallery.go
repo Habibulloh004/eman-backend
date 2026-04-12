@@ -7,19 +7,24 @@ import (
 )
 
 type GalleryItem struct {
-	ID          uint           `gorm:"primaryKey" json:"id"`
-	Title       string         `json:"title"`
-	TitleUz     string         `json:"title_uz"`
-	Description string         `json:"description"`
+	ID            uint           `gorm:"primaryKey" json:"id"`
+	Title         string         `json:"title"`
+	TitleUz       string         `json:"title_uz"`
+	Description   string         `json:"description"`
 	DescriptionUz string       `json:"description_uz"`
-	Type        string         `json:"type"` // image, video
-	URL         string         `json:"url"`
-	RedirectURL string         `json:"redirect_url"`
-	Thumbnail   string         `json:"thumbnail"` // for videos
-	Category    string         `json:"category"`  // construction, interior, exterior
-	SortOrder   int            `json:"sort_order"`
-	IsPublished bool           `json:"is_published" gorm:"default:true"`
-	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
+	Type          string         `json:"type"` // image, video
+	URL           string         `json:"url"`
+	RedirectURL   string         `json:"redirect_url"`
+	Thumbnail     string         `json:"thumbnail"` // for videos
+	Category      string         `json:"category"`  // construction, interior, exterior
+	HomeSection   string         `json:"home_section"`
+	HomeSectionUz string         `json:"home_section_uz"`
+	HomeDesc      string         `json:"home_desc"`
+	HomeDescUz    string         `json:"home_desc_uz"`
+	HomeOrder     int            `json:"home_order"`
+	SortOrder     int            `json:"sort_order"`
+	IsPublished   bool           `json:"is_published" gorm:"default:true"`
+	CreatedAt     time.Time      `json:"created_at"`
+	UpdatedAt     time.Time      `json:"updated_at"`
+	DeletedAt     gorm.DeletedAt `gorm:"index" json:"-"`
 }

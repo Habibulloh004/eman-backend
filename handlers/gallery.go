@@ -107,6 +107,11 @@ type CreateGalleryRequest struct {
 	RedirectURL   string `json:"redirect_url"`
 	Thumbnail     string `json:"thumbnail"`
 	Category      string `json:"category"`
+	HomeSection   string `json:"home_section"`
+	HomeSectionUz string `json:"home_section_uz"`
+	HomeDesc      string `json:"home_desc"`
+	HomeDescUz    string `json:"home_desc_uz"`
+	HomeOrder     int    `json:"home_order"`
 	SortOrder     int    `json:"sort_order"`
 	IsPublished   bool   `json:"is_published"`
 }
@@ -131,6 +136,11 @@ func (h *GalleryHandler) Create(c *fiber.Ctx) error {
 		RedirectURL:   req.RedirectURL,
 		Thumbnail:     req.Thumbnail,
 		Category:      req.Category,
+		HomeSection:   req.HomeSection,
+		HomeSectionUz: req.HomeSectionUz,
+		HomeDesc:      req.HomeDesc,
+		HomeDescUz:    req.HomeDescUz,
+		HomeOrder:     req.HomeOrder,
 		SortOrder:     req.SortOrder,
 		IsPublished:   req.IsPublished,
 	}
@@ -180,6 +190,11 @@ func (h *GalleryHandler) Update(c *fiber.Ctx) error {
 	item.RedirectURL = req.RedirectURL
 	item.Thumbnail = req.Thumbnail
 	item.Category = req.Category
+	item.HomeSection = req.HomeSection
+	item.HomeSectionUz = req.HomeSectionUz
+	item.HomeDesc = req.HomeDesc
+	item.HomeDescUz = req.HomeDescUz
+	item.HomeOrder = req.HomeOrder
 	item.SortOrder = req.SortOrder
 	item.IsPublished = req.IsPublished
 

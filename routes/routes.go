@@ -25,6 +25,7 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	uploadHandler := handlers.NewUploadHandler(storageService)
 	mapIconHandler := handlers.NewMapIconHandler()
 	mapIconTypeHandler := handlers.NewMapIconTypeHandler(storageService)
+	challengesHandler := handlers.NewChallengesHandler(storageService)
 
 	api := app.Group("/api")
 
@@ -51,6 +52,13 @@ func Setup(app *fiber.App, cfg *config.Config) {
 
 	// Submissions (public - create only)
 	api.Post("/submissions", submissionsHandler.Create)
+
+	// Challenges (public)
+	challenges := api.Group("/challenges")
+	challenges.Get("/", challengesHandler.ListPublic)
+	challenges.Get("/my", challengesHandler.MyChallenge)
+	challenges.Post("/:id/join", challengesHandler.Join)
+	challenges.Post("/:id/cancel", challengesHandler.Cancel)
 
 	// Settings (public - read only)
 	api.Get("/settings", settingsHandler.GetPublic)
@@ -112,6 +120,16 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	adminSubmissions.Get("/:id", submissionsHandler.Get)
 	adminSubmissions.Put("/:id", submissionsHandler.Update)
 	adminSubmissions.Delete("/:id", submissionsHandler.Delete)
+
+	// Challenges management
+	adminChallenges := admin.Group("/challenges")
+	adminChallenges.Get("/", challengesHandler.List)
+	adminChallenges.Get("/:id", challengesHandler.Get)
+	adminChallenges.Post("/", challengesHandler.Create)
+	adminChallenges.Put("/:id", challengesHandler.Update)
+	adminChallenges.Delete("/:id", challengesHandler.Delete)
+	adminChallenges.Post("/upload", challengesHandler.Upload)
+	adminChallenges.Get("/:id/participants", challengesHandler.Participants)
 
 	// Settings management
 	adminSettings := admin.Group("/settings")

@@ -39,6 +39,8 @@ func Migrate() error {
 		&models.Project{},
 		&models.ContactSubmission{},
 		&models.SiteSetting{},
+		&models.Challenge{},
+		&models.ChallengeParticipant{},
 	)
 	if err != nil {
 		return err
@@ -49,6 +51,11 @@ func Migrate() error {
 	// Seed default settings if table is empty or missing keys
 	if err := SeedSettings(); err != nil {
 		log.Printf("Warning: Failed to seed settings: %v", err)
+	}
+
+	// Seed default projects if table is empty or has empty fields
+	if err := SeedProjects(); err != nil {
+		log.Printf("Warning: Failed to seed projects: %v", err)
 	}
 
 	return nil
