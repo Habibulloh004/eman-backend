@@ -11,9 +11,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load .env for local/dev runs. In prod, real environment variables still take precedence.
+	if err := godotenv.Load(); err != nil {
+		log.Printf("No .env loaded (%v), continuing with OS environment", err)
+	}
+
 	cfg := config.Load()
 
 	// Connect to database

@@ -3,19 +3,50 @@ package handlers
 import (
 	"eman-backend/database"
 	"eman-backend/models"
+	"eman-backend/services"
 	ws "eman-backend/websocket"
+	"fmt"
+	"log"
 	"strconv"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type SubmissionsHandler struct {
-	hub *ws.Hub
+	hub          *ws.Hub
+	macroService *services.MacroService
+	telegram     *services.TelegramService
 }
 
-func NewSubmissionsHandler() *SubmissionsHandler {
+func NewSubmissionsHandler(macroService *services.MacroService, telegram *services.TelegramService) *SubmissionsHandler {
 	return &SubmissionsHandler{
-		hub: ws.GetHub(),
+		hub:          ws.GetHub(),
+		macroService: macroService,
+		telegram:     telegram,
+	}
+}
+
+func safeLine(value string) string {
+	trimmed := strings.TrimSpace(value)
+	if trimmed == "" {
+		return "-"
+	}
+	return strings.ReplaceAll(trimmed, "\n", " ")
+}
+
+func sourceRu(source string) string {
+	switch strings.TrimSpace(source) {
+	case "catalog_request":
+		return "Запрос из каталога"
+	case "contact_page":
+		return "Контактная страница"
+	case "callback":
+		return "Обратный звонок"
+	case "question":
+		return "Вопрос"
+	default:
+		return source
 	}
 }
 
@@ -131,6 +162,62 @@ func (h *SubmissionsHandler) Create(c *fiber.Ctx) error {
 			"message": "Failed to create submission",
 		})
 	}
+
+	// Map source to Macro CRM action
+	actionMap := map[string]string{
+		"contact_page":    "callback",
+		"catalog_request": "buy",
+		"callback":        "callback",
+		"question":        "question",
+	}
+	action := actionMap[req.Source]
+	if action == "" {
+		action = "callback"
+	}
+
+	// Forward to MacroCRM (non-blocking, don't fail the user request)
+	go func() {
+		macroResp, err := h.macroService.SendRequest(action, req.Name, req.Phone, req.Email, req.Message, req.EstateID)
+		if err != nil {
+			log.Printf("[MacroCRM] Failed to send request for submission #%d: %v", submission.ID, err)
+			return
+		}
+		log.Printf("[MacroCRM] Submission #%d sent successfully, macro estate_id: %d", submission.ID, macroResp.EstateID)
+	}()
+
+	// Telegram notification (non-blocking)
+	go func() {
+		if h.telegram == nil || !h.telegram.Enabled() {
+			return
+		}
+
+		estateID := "-"
+		estateDetails := "-"
+		if req.EstateID != nil {
+			estateID = strconv.Itoa(*req.EstateID)
+			if title := h.macroService.GetEstateTitleByID(*req.EstateID); strings.TrimSpace(title) != "" {
+				estateDetails = safeLine(title)
+			}
+		}
+
+		text := fmt.Sprintf(
+			"🔔 Новая заявка\nID: %d\nИсточник: %s\nИмя: %s\nТелефон: %s\nID объекта: %s\nОбъект: %s\nПлан оплаты: %s\nСообщение: %s",
+			submission.ID,
+			safeLine(sourceRu(req.Source)),
+			safeLine(req.Name),
+			safeLine(req.Phone),
+			estateID,
+			estateDetails,
+			safeLine(req.PaymentPlan),
+			safeLine(req.Message),
+		)
+
+		if err := h.telegram.SendMessage(text); err != nil {
+			log.Printf("[Telegram] Failed to send notification for submission #%d: %v", submission.ID, err)
+			return
+		}
+		log.Printf("[Telegram] Notification sent for submission #%d", submission.ID)
+	}()
 
 	// Broadcast new submission to all connected admin clients
 	h.hub.Broadcast("new_submission", fiber.Map{

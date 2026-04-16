@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 )
 
 type Config struct {
@@ -11,6 +12,9 @@ type Config struct {
 	Domain    string
 	AppSecret string
 	MacroAPI  string
+	MacroEstateSyncInterval time.Duration
+	TelegramBotToken        string
+	TelegramChatID          string
 
 	// Database
 	DBDSN string
@@ -61,6 +65,9 @@ func Load() *Config {
 		Domain:    getEnv("MACRO_DOMAIN", "eman-riverside.vercel.app"),
 		AppSecret: getEnv("MACRO_APP_SECRET", "zUHxHqwGhPcvy39QD2r3huFCnK3UuKW26C9E"),
 		MacroAPI:  getEnv("MACRO_API_URL", "https://api.macroserver.uz"),
+		MacroEstateSyncInterval: getEnvDuration("MACRO_ESTATE_SYNC_INTERVAL", 30*time.Minute),
+		TelegramBotToken:        getEnv("TELEGRAM_BOT_TOKEN", ""),
+		TelegramChatID:          getEnv("TELEGRAM_CHAT_ID", ""),
 
 		// Database
 		DBDSN: dbDSN,
@@ -113,6 +120,15 @@ func getEnvInt(key string, defaultValue int) int {
 func getEnvBool(key string, defaultValue bool) bool {
 	if value := os.Getenv(key); value != "" {
 		if parsed, err := strconv.ParseBool(value); err == nil {
+			return parsed
+		}
+	}
+	return defaultValue
+}
+
+func getEnvDuration(key string, defaultValue time.Duration) time.Duration {
+	if value := os.Getenv(key); value != "" {
+		if parsed, err := time.ParseDuration(value); err == nil && parsed > 0 {
 			return parsed
 		}
 	}

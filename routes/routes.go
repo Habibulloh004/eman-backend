@@ -5,6 +5,7 @@ import (
 	"eman-backend/handlers"
 	"eman-backend/middleware"
 	"eman-backend/services"
+	"log"
 
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
@@ -14,13 +15,19 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	// Services
 	macroService := services.NewMacroService(cfg)
 	storageService := services.NewStorageService(cfg)
+	telegramService := services.NewTelegramService(cfg.TelegramBotToken, cfg.TelegramChatID)
+	if telegramService.Enabled() {
+		log.Printf("[Telegram] notifications enabled for chat_id=%s", cfg.TelegramChatID)
+	} else {
+		log.Printf("[Telegram] notifications disabled (TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is empty)")
+	}
 
 	// Handlers
 	estateHandler := handlers.NewEstateHandler(macroService)
 	authHandler := handlers.NewAuthHandler(cfg)
 	galleryHandler := handlers.NewGalleryHandler(storageService)
 	projectsHandler := handlers.NewProjectsHandler(storageService)
-	submissionsHandler := handlers.NewSubmissionsHandler()
+	submissionsHandler := handlers.NewSubmissionsHandler(macroService, telegramService)
 	settingsHandler := handlers.NewSettingsHandler()
 	uploadHandler := handlers.NewUploadHandler(storageService)
 	mapIconHandler := handlers.NewMapIconHandler()

@@ -110,6 +110,15 @@ func DefaultSettings() []SiteSetting {
 		{Key: "hero_title", Value: "EMAN RIVERSIDE", Type: TypeString, Category: CategoryContent, Label: "Заголовок Hero", LabelUz: "Hero sarlavha"},
 		{Key: "hero_subtitle", Value: "Жилой комплекс нового уровня", Type: TypeString, Category: CategoryContent, Label: "Подзаголовок Hero", LabelUz: "Hero tavsif"},
 		{Key: "hero_subtitle_uz", Value: "Yangi darajadagi turar-joy majmuasi", Type: TypeString, Category: CategoryContent, Label: "Подзаголовок Hero (UZ)", LabelUz: "Hero tavsif (UZ)"},
+		{Key: "hero_banners", Value: `[
+			{
+				"image": "/images/hero.webp",
+				"title_ru": "Tez Kunda\nСкоро",
+				"title_uz": "Tez Kunda",
+				"subtitle_ru": "Жилой комплекс нового уровня",
+				"subtitle_uz": "Yangi darajadagi turar-joy majmuasi"
+			}
+		]`, Type: TypeJSON, Category: CategoryContent, Label: "Баннеры Hero", LabelUz: "Hero bannerlari"},
 		{Key: "map_embed_url", Value: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d47980.98675893856!2d69.21992457431642!3d41.31147339999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8b0cc379e9c3%3A0xa5a9323b4aa5cb98!2sTashkent%2C%20Uzbekistan!5e0!3m2!1sen!2s!4v1703955000000!5m2!1sen!2s", Type: TypeString, Category: CategoryContent, Label: "Google Maps URL", LabelUz: "Google Maps URL"},
 		{Key: "map_coordinates", Value: "41.3111,69.2401", Type: TypeString, Category: CategoryContent, Label: "Координаты карты", LabelUz: "Xarita koordinatalari"},
 		{Key: "map_zoom", Value: "14", Type: TypeNumber, Category: CategoryContent, Label: "Масштаб карты", LabelUz: "Xarita masshtabi"},

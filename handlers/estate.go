@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"eman-backend/services"
+	"net/url"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -30,7 +31,7 @@ func (h *EstateHandler) GetComplexes(c *fiber.Ctx) error {
 
 // GetEstates возвращает список квартир с фильтрацией
 func (h *EstateHandler) GetEstates(c *fiber.Ctx) error {
-	params := make(map[string]string)
+	params := make(url.Values)
 
 	// Поддерживаемые query параметры для фильтрации
 	queryParams := []string{
@@ -40,6 +41,7 @@ func (h *EstateHandler) GetEstates(c *fiber.Ctx) error {
 		"limit",      // количество записей
 		"offset",     // смещение
 		"rooms",      // количество комнат
+		"floor",      // конкретные этажи (повторяемый параметр)
 		"price_from", // цена от
 		"price_to",   // цена до
 		"area_from",  // площадь от
@@ -48,11 +50,16 @@ func (h *EstateHandler) GetEstates(c *fiber.Ctx) error {
 		"floor_to",   // этаж до
 	}
 
-	for _, param := range queryParams {
-		if value := c.Query(param); value != "" {
-			params[param] = value
+	// Preserve repeated params such as ?rooms=2&rooms=3, ?floor=4&floor=5
+	c.Context().QueryArgs().VisitAll(func(key, value []byte) {
+		k := string(key)
+		for _, supported := range queryParams {
+			if k == supported {
+				params[k] = append(params[k], string(value))
+				break
+			}
 		}
-	}
+	})
 
 	data, err := h.macroService.GetEstates(params)
 	if err != nil {
