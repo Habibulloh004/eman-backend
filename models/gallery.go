@@ -16,7 +16,7 @@ type GalleryItem struct {
 	URL           string         `json:"url"`
 	RedirectURL   string         `json:"redirect_url"`
 	Thumbnail     string         `json:"thumbnail"` // for videos
-	Category      string         `json:"category"`  // construction, interior, exterior
+	Category      string         `json:"category"`  // gallery, interior, exterior
 	HomeSection   string         `json:"home_section"`
 	HomeSectionUz string         `json:"home_section_uz"`
 	HomeDesc      string         `json:"home_desc"`
