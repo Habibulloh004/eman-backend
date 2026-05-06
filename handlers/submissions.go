@@ -163,21 +163,13 @@ func (h *SubmissionsHandler) Create(c *fiber.Ctx) error {
 		})
 	}
 
-	// Map source to Macro CRM action
-	actionMap := map[string]string{
-		"contact_page":    "callback",
-		"catalog_request": "buy",
-		"callback":        "callback",
-		"question":        "question",
-	}
-	action := actionMap[req.Source]
-	if action == "" {
-		action = "callback"
-	}
+	// Send all forms to MacroCRM in the same format.
+	// Extra context (estate/payment plan/source) is kept in DB/Telegram only.
+	action := "callback"
 
 	// Forward to MacroCRM (non-blocking, don't fail the user request)
 	go func() {
-		macroResp, err := h.macroService.SendRequest(action, req.Name, req.Phone, req.Email, req.Message, req.EstateID)
+		macroResp, err := h.macroService.SendRequest(action, req.Name, req.Phone, req.Email, req.Message, nil)
 		if err != nil {
 			log.Printf("[MacroCRM] Failed to send request for submission #%d: %v", submission.ID, err)
 			return
