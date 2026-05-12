@@ -114,6 +114,65 @@ func DefaultSettings() []SiteSetting {
 		{Key: "about_us_title_uz", Value: "EMAN Riverside loyihasi haqida", Type: TypeString, Category: CategoryContent, Label: "Заголовок О нас (UZ)", LabelUz: "Biz haqimizda sarlavha (UZ)"},
 		{Key: "about_us_content", Value: `<p><strong>EMAN Riverside</strong> — это современный жилой проект в Ташкенте, созданный для людей, которые ценят комфорт, архитектуру и продуманную инфраструктуру.</p><p>Мы проектируем пространство, где важна каждая деталь: от планировок и инженерных решений до благоустройства двора и сервисов рядом с домом.</p><p>Наша команда сопровождает клиента на каждом этапе: от выбора квартиры до оформления сделки. Мы строим не просто квадратные метры — мы создаем среду для спокойной и качественной жизни.</p>`, Type: TypeString, Category: CategoryContent, Label: "Текст О нас", LabelUz: "Biz haqimizda matn"},
 		{Key: "about_us_content_uz", Value: `<p><strong>EMAN Riverside</strong> — bu Toshkentda qulay hayot, zamonaviy me’morchilik va puxta o‘ylangan infratuzilmani qadrlaydigan insonlar uchun yaratilgan turar-joy loyihasi.</p><p>Biz har bir detalga e’tibor beramiz: kvartira rejalari, muhandislik yechimlari, hovli obodonchiligi va atrofdagi xizmatlargacha.</p><p>Jamoamiz mijozni barcha bosqichlarda qo‘llab-quvvatlaydi: kvartira tanlashdan shartnomani rasmiylashtirishgacha. Biz shunchaki uy emas, balki sifatli va xotirjam hayot uchun muhit yaratamiz.</p>`, Type: TypeString, Category: CategoryContent, Label: "Текст О нас (UZ)", LabelUz: "Biz haqimizda matn (UZ)"},
+		{Key: "about_us_right_image", Value: "", Type: TypeString, Category: CategoryContent, Label: "О нас: изображение справа", LabelUz: "Biz haqimizda: o'ng taraf rasmi"},
+		{Key: "about_us_certificates", Value: `[
+			{
+				"image": "/images/01.webp",
+				"title_ru": "Сертификат соответствия №1",
+				"title_uz": "Muvofiqlik sertifikati №1",
+				"description_ru": "Подтверждение соответствия строительным стандартам.",
+				"description_uz": "Qurilish standartlariga muvofiqlik tasdig'i."
+			},
+			{
+				"image": "/images/02.1.webp",
+				"title_ru": "Сертификат соответствия №2",
+				"title_uz": "Muvofiqlik sertifikati №2",
+				"description_ru": "Документ о проверке качества материалов.",
+				"description_uz": "Materiallar sifatini tekshirish hujjati."
+			},
+			{
+				"image": "/images/02.2.webp",
+				"title_ru": "Лицензия на деятельность",
+				"title_uz": "Faoliyat litsenziyasi",
+				"description_ru": "Разрешение на выполнение профильных работ.",
+				"description_uz": "Profil ishlarini bajarish uchun ruxsatnoma."
+			},
+			{
+				"image": "/images/02.3.webp",
+				"title_ru": "Сертификат безопасности",
+				"title_uz": "Xavfsizlik sertifikati",
+				"description_ru": "Подтверждение соблюдения норм безопасности.",
+				"description_uz": "Xavfsizlik me'yorlariga rioya qilinganini tasdiqlaydi."
+			},
+			{
+				"image": "/images/03.webp",
+				"title_ru": "Экологический сертификат",
+				"title_uz": "Ekologik sertifikat",
+				"description_ru": "Соответствие экологическим требованиям проекта.",
+				"description_uz": "Loyiha ekologik talablarga mosligini tasdiqlaydi."
+			},
+			{
+				"image": "/images/04.webp",
+				"title_ru": "Сертификат качества №3",
+				"title_uz": "Sifat sertifikati №3",
+				"description_ru": "Акт проверки внутренних инженерных систем.",
+				"description_uz": "Ichki muhandislik tizimlari tekshiruv dalolatnomasi."
+			},
+			{
+				"image": "/images/05.jpg",
+				"title_ru": "Сертификат качества №4",
+				"title_uz": "Sifat sertifikati №4",
+				"description_ru": "Протокол технического аудита объекта.",
+				"description_uz": "Obyekt texnik auditi protokoli."
+			},
+			{
+				"image": "/images/hero/1.png",
+				"title_ru": "Сертификат ввода в эксплуатацию",
+				"title_uz": "Foydalanishga topshirish sertifikati",
+				"description_ru": "Документ о готовности объекта к эксплуатации.",
+				"description_uz": "Obyekt foydalanishga tayyorligini tasdiqlovchi hujjat."
+			}
+		]`, Type: TypeJSON, Category: CategoryContent, Label: "О нас: сертификаты", LabelUz: "Biz haqimizda: sertifikatlar"},
 		{Key: "hero_banners", Value: `[
 			{
 				"image": "/images/hero.webp",
