@@ -215,6 +215,21 @@ func estateHumanTitle(item map[string]any) string {
 	return ""
 }
 
+func firstEstateID(estates []map[string]any) *int {
+	for _, item := range estates {
+		itemID, ok := getNumberField(item, "id")
+		if !ok {
+			continue
+		}
+		id := int(itemID)
+		if id <= 0 {
+			continue
+		}
+		return &id
+	}
+	return nil
+}
+
 func (s *MacroService) fetchEstateByID(id int) map[string]any {
 	url := s.buildURL("/estate/get/", map[string]string{
 		"id": strconv.Itoa(id),
@@ -254,6 +269,20 @@ func (s *MacroService) GetEstateTitleByID(id int) string {
 	}
 
 	return ""
+}
+
+// GetDefaultEstateID returns the first valid estate id from the Macro estate feed.
+// Priority: cached snapshot -> one forced refresh.
+func (s *MacroService) GetDefaultEstateID() *int {
+	if id := firstEstateID(s.getEstatesSnapshot()); id != nil {
+		return id
+	}
+
+	if err := s.refreshEstatesSnapshot(); err == nil {
+		return firstEstateID(s.getEstatesSnapshot())
+	}
+
+	return nil
 }
 
 func getNumberField(item map[string]any, key string) (float64, bool) {

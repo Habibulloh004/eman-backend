@@ -5,6 +5,7 @@ import (
 	"eman-backend/models"
 	"eman-backend/services"
 	ws "eman-backend/websocket"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -41,6 +42,10 @@ func sourceRu(source string) string {
 		return "Запрос из каталога"
 	case "contact_page":
 		return "Контактная страница"
+	case "header":
+		return "Хедер"
+	case "footer":
+		return "Футер"
 	case "callback":
 		return "Обратный звонок"
 	case "question":
@@ -120,6 +125,78 @@ type CreateSubmissionRequest struct {
 	PaymentPlan string `json:"payment_plan"`
 }
 
+type paymentPlanSetting struct {
+	Title string `json:"title"`
+}
+
+func (h *SubmissionsHandler) defaultPaymentPlan() string {
+	var setting models.SiteSetting
+	if err := database.DB.Where("key = ?", "payment_plans").First(&setting).Error; err != nil {
+		return ""
+	}
+
+	var plans []paymentPlanSetting
+	if err := json.Unmarshal([]byte(setting.Value), &plans); err != nil {
+		return ""
+	}
+
+	for _, plan := range plans {
+		title := strings.TrimSpace(plan.Title)
+		if title != "" {
+			return title
+		}
+	}
+
+	return ""
+}
+
+func (h *SubmissionsHandler) normalizeSubmissionRequest(req *CreateSubmissionRequest) {
+	if req == nil {
+		return
+	}
+
+	req.Name = strings.TrimSpace(req.Name)
+	req.Phone = strings.TrimSpace(req.Phone)
+	req.Email = strings.TrimSpace(req.Email)
+	req.Message = strings.TrimSpace(req.Message)
+	req.Source = strings.TrimSpace(req.Source)
+	req.PaymentPlan = strings.TrimSpace(req.PaymentPlan)
+
+	if req.Source == "" {
+		req.Source = "contact_page"
+	}
+
+	if req.EstateID == nil || *req.EstateID <= 0 {
+		req.EstateID = h.macroService.GetDefaultEstateID()
+	}
+
+	if req.PaymentPlan == "" {
+		req.PaymentPlan = h.defaultPaymentPlan()
+	}
+
+	if req.Source == "header" || req.Source == "footer" {
+		req.Message = h.buildHeaderFooterMessage(req)
+	}
+}
+
+func (h *SubmissionsHandler) buildHeaderFooterMessage(req *CreateSubmissionRequest) string {
+	if req == nil {
+		return ""
+	}
+
+	sourceLabel := sourceRu(req.Source)
+	if sourceLabel == "" {
+		sourceLabel = "Заявка"
+	}
+
+	base := fmt.Sprintf("%s с значениями по умолчанию", sourceLabel)
+	if req.Message == "" {
+		return base
+	}
+
+	return fmt.Sprintf("%s | %s |", base, req.Message)
+}
+
 // Create adds a new submission (public endpoint)
 func (h *SubmissionsHandler) Create(c *fiber.Ctx) error {
 	var req CreateSubmissionRequest
@@ -130,17 +207,14 @@ func (h *SubmissionsHandler) Create(c *fiber.Ctx) error {
 		})
 	}
 
+	h.normalizeSubmissionRequest(&req)
+
 	// Validate required fields
 	if req.Name == "" || req.Phone == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
 			"message": "Name and phone are required",
 		})
-	}
-
-	// Default source if not provided
-	if req.Source == "" {
-		req.Source = "contact_page"
 	}
 
 	submission := models.ContactSubmission{
@@ -169,7 +243,7 @@ func (h *SubmissionsHandler) Create(c *fiber.Ctx) error {
 
 	// Forward to MacroCRM (non-blocking, don't fail the user request)
 	go func() {
-		macroResp, err := h.macroService.SendRequest(action, req.Name, req.Phone, req.Email, req.Message, nil)
+		macroResp, err := h.macroService.SendRequest(action, req.Name, req.Phone, req.Email, req.Message, req.EstateID)
 		if err != nil {
 			log.Printf("[MacroCRM] Failed to send request for submission #%d: %v", submission.ID, err)
 			return
