@@ -10,8 +10,10 @@ type GalleryItem struct {
 	ID            uint           `gorm:"primaryKey" json:"id"`
 	Title         string         `json:"title"`
 	TitleUz       string         `json:"title_uz"`
+	TitleEn       string         `json:"title_en"`
 	Description   string         `json:"description"`
-	DescriptionUz string       `json:"description_uz"`
+	DescriptionUz string         `json:"description_uz"`
+	DescriptionEn string         `json:"description_en"`
 	Type          string         `json:"type"` // image, video
 	URL           string         `json:"url"`
 	RedirectURL   string         `json:"redirect_url"`
@@ -19,8 +21,10 @@ type GalleryItem struct {
 	Category      string         `json:"category"`  // gallery, interior, exterior
 	HomeSection   string         `json:"home_section"`
 	HomeSectionUz string         `json:"home_section_uz"`
+	HomeSectionEn string         `json:"home_section_en"`
 	HomeDesc      string         `json:"home_desc"`
 	HomeDescUz    string         `json:"home_desc_uz"`
+	HomeDescEn    string         `json:"home_desc_en"`
 	HomeOrder     int            `json:"home_order"`
 	SortOrder     int            `json:"sort_order"`
 	IsPublished   bool           `json:"is_published" gorm:"default:true"`

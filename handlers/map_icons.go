@@ -34,6 +34,9 @@ func hydrateMapIconTypeNames(item *models.MapIconType) {
 	if item.NameUz == "" && item.Name != "" {
 		item.NameUz = item.Name
 	}
+	if item.NameEn == "" && item.NameRu != "" {
+		item.NameEn = item.NameRu
+	}
 }
 
 func hydrateMapIconNames(item *models.MapIcon) {
@@ -45,6 +48,9 @@ func hydrateMapIconNames(item *models.MapIcon) {
 	}
 	if item.NameUz == "" && item.Name != "" {
 		item.NameUz = item.Name
+	}
+	if item.NameEn == "" && item.NameRu != "" {
+		item.NameEn = item.NameRu
 	}
 	hydrateMapIconTypeNames(&item.Type)
 }
@@ -74,6 +80,7 @@ type CreateMapIconTypeRequest struct {
 	Name   string `json:"name"`
 	NameRu string `json:"name_ru"`
 	NameUz string `json:"name_uz"`
+	NameEn string `json:"name_en"`
 	Icon   string `json:"icon"`
 }
 
@@ -86,15 +93,16 @@ func (h *MapIconTypeHandler) Create(c *fiber.Ctx) error {
 		})
 	}
 
-	if req.NameRu == "" && req.NameUz == "" && req.Name != "" {
+	if req.NameRu == "" && req.NameUz == "" && req.NameEn == "" && req.Name != "" {
 		req.NameRu = req.Name
 		req.NameUz = req.Name
+		req.NameEn = req.Name
 	}
 
-	if req.NameRu == "" || req.NameUz == "" || req.Icon == "" {
+	if req.NameRu == "" || req.NameUz == "" || req.NameEn == "" || req.Icon == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": "Name (RU), name (UZ) and icon are required",
+			"message": "Name (RU), name (UZ), name (EN) and icon are required",
 		})
 	}
 
@@ -102,6 +110,7 @@ func (h *MapIconTypeHandler) Create(c *fiber.Ctx) error {
 		Name:   req.Name,
 		NameRu: req.NameRu,
 		NameUz: req.NameUz,
+		NameEn: req.NameEn,
 		Icon:   req.Icon,
 	}
 
@@ -144,21 +153,23 @@ func (h *MapIconTypeHandler) Update(c *fiber.Ctx) error {
 		})
 	}
 
-	if req.NameRu == "" && req.NameUz == "" && req.Name != "" {
+	if req.NameRu == "" && req.NameUz == "" && req.NameEn == "" && req.Name != "" {
 		req.NameRu = req.Name
 		req.NameUz = req.Name
+		req.NameEn = req.Name
 	}
 
-	if req.NameRu == "" || req.NameUz == "" || req.Icon == "" {
+	if req.NameRu == "" || req.NameUz == "" || req.NameEn == "" || req.Icon == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": "Name (RU), name (UZ) and icon are required",
+			"message": "Name (RU), name (UZ), name (EN) and icon are required",
 		})
 	}
 
 	item.Name = req.Name
 	item.NameRu = req.NameRu
 	item.NameUz = req.NameUz
+	item.NameEn = req.NameEn
 	item.Icon = req.Icon
 
 	if item.Name == "" {
@@ -271,6 +282,7 @@ type CreateMapIconRequest struct {
 	Name      string  `json:"name"`
 	NameRu    string  `json:"name_ru"`
 	NameUz    string  `json:"name_uz"`
+	NameEn    string  `json:"name_en"`
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lng"`
 	TypeID    uint    `json:"type_id"`
@@ -285,15 +297,16 @@ func (h *MapIconHandler) Create(c *fiber.Ctx) error {
 		})
 	}
 
-	if req.NameRu == "" && req.NameUz == "" && req.Name != "" {
+	if req.NameRu == "" && req.NameUz == "" && req.NameEn == "" && req.Name != "" {
 		req.NameRu = req.Name
 		req.NameUz = req.Name
+		req.NameEn = req.Name
 	}
 
-	if req.NameRu == "" || req.NameUz == "" || req.TypeID == 0 {
+	if req.NameRu == "" || req.NameUz == "" || req.NameEn == "" || req.TypeID == 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": "Name (RU), name (UZ), type, latitude and longitude are required",
+			"message": "Name (RU), name (UZ), name (EN), type, latitude and longitude are required",
 		})
 	}
 
@@ -308,6 +321,7 @@ func (h *MapIconHandler) Create(c *fiber.Ctx) error {
 		Name:      req.Name,
 		NameRu:    req.NameRu,
 		NameUz:    req.NameUz,
+		NameEn:    req.NameEn,
 		Latitude:  req.Latitude,
 		Longitude: req.Longitude,
 		TypeID:    req.TypeID,
@@ -361,15 +375,16 @@ func (h *MapIconHandler) Update(c *fiber.Ctx) error {
 		})
 	}
 
-	if req.NameRu == "" && req.NameUz == "" && req.Name != "" {
+	if req.NameRu == "" && req.NameUz == "" && req.NameEn == "" && req.Name != "" {
 		req.NameRu = req.Name
 		req.NameUz = req.Name
+		req.NameEn = req.Name
 	}
 
-	if req.NameRu == "" || req.NameUz == "" || req.TypeID == 0 {
+	if req.NameRu == "" || req.NameUz == "" || req.NameEn == "" || req.TypeID == 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
-			"message": "Name (RU), name (UZ), type, latitude and longitude are required",
+			"message": "Name (RU), name (UZ), name (EN), type, latitude and longitude are required",
 		})
 	}
 
@@ -383,6 +398,7 @@ func (h *MapIconHandler) Update(c *fiber.Ctx) error {
 	item.Name = req.Name
 	item.NameRu = req.NameRu
 	item.NameUz = req.NameUz
+	item.NameEn = req.NameEn
 	item.Latitude = req.Latitude
 	item.Longitude = req.Longitude
 	item.TypeID = req.TypeID

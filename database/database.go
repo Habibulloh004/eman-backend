@@ -206,7 +206,7 @@ func SeedSettings() error {
 			}
 
 			// Backfill empty FAQ JSON only on startup.
-			if setting.Type == models.TypeJSON && (setting.Key == "faq_items" || setting.Key == "faq_items_uz") {
+			if setting.Type == models.TypeJSON && (setting.Key == "faq_items" || setting.Key == "faq_items_uz" || setting.Key == "faq_items_en") {
 				trimmed := strings.TrimSpace(current.Value)
 				if trimmed == "" || trimmed == "[]" || trimmed == "{}" || trimmed == "null" {
 					if err := DB.Model(&models.SiteSetting{}).

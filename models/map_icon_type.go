@@ -7,6 +7,7 @@ type MapIconType struct {
 	Name      string    `json:"name"`
 	NameRu    string    `json:"name_ru"`
 	NameUz    string    `json:"name_uz"`
+	NameEn    string    `json:"name_en"`
 	Icon      string    `json:"icon"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

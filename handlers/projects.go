@@ -80,10 +80,13 @@ func (h *ProjectsHandler) Get(c *fiber.Ctx) error {
 type CreateProjectRequest struct {
 	TypeRu        string `json:"type_ru"`
 	TypeUz        string `json:"type_uz"`
+	TypeEn        string `json:"type_en"`
 	AreaRu        string `json:"area_ru"`
 	AreaUz        string `json:"area_uz"`
+	AreaEn        string `json:"area_en"`
 	DescriptionRu string `json:"description_ru"`
 	DescriptionUz string `json:"description_uz"`
+	DescriptionEn string `json:"description_en"`
 	Image         string `json:"image"`
 	SortOrder     int    `json:"sort_order"`
 	IsPublished   bool   `json:"is_published"`
@@ -106,10 +109,13 @@ func (h *ProjectsHandler) Create(c *fiber.Ctx) error {
 	item := models.Project{
 		TypeRu:        req.TypeRu,
 		TypeUz:        req.TypeUz,
+		TypeEn:        req.TypeEn,
 		AreaRu:        req.AreaRu,
 		AreaUz:        req.AreaUz,
+		AreaEn:        req.AreaEn,
 		DescriptionRu: req.DescriptionRu,
 		DescriptionUz: req.DescriptionUz,
+		DescriptionEn: req.DescriptionEn,
 		Image:         req.Image,
 		SortOrder:     maxSortOrder + 1,
 		IsPublished:   req.IsPublished,
@@ -153,10 +159,13 @@ func (h *ProjectsHandler) Update(c *fiber.Ctx) error {
 
 	item.TypeRu = req.TypeRu
 	item.TypeUz = req.TypeUz
+	item.TypeEn = req.TypeEn
 	item.AreaRu = req.AreaRu
 	item.AreaUz = req.AreaUz
+	item.AreaEn = req.AreaEn
 	item.DescriptionRu = req.DescriptionRu
 	item.DescriptionUz = req.DescriptionUz
+	item.DescriptionEn = req.DescriptionEn
 	item.Image = req.Image
 	item.SortOrder = req.SortOrder
 	item.IsPublished = req.IsPublished

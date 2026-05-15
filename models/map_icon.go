@@ -7,6 +7,7 @@ type MapIcon struct {
 	Name      string      `json:"name"`
 	NameRu    string      `json:"name_ru"`
 	NameUz    string      `json:"name_uz"`
+	NameEn    string      `json:"name_en"`
 	Latitude  float64     `json:"lat"`
 	Longitude float64     `json:"lng"`
 	TypeID    uint        `gorm:"index" json:"type_id"`

@@ -19,14 +19,17 @@ func SeedProjects() error {
 			if i >= len(defaults) {
 				break
 			}
-			if item.TypeRu == "" || item.DescriptionRu == "" {
+			if item.TypeRu == "" || item.DescriptionRu == "" || item.TypeEn == "" || item.AreaEn == "" || item.DescriptionEn == "" {
 				d := defaults[i]
 				item.TypeRu = d.TypeRu
 				item.TypeUz = d.TypeUz
+				item.TypeEn = d.TypeEn
 				item.AreaRu = d.AreaRu
 				item.AreaUz = d.AreaUz
+				item.AreaEn = d.AreaEn
 				item.DescriptionRu = d.DescriptionRu
 				item.DescriptionUz = d.DescriptionUz
+				item.DescriptionEn = d.DescriptionEn
 				if item.Image == "" {
 					item.Image = d.Image
 				}
@@ -56,10 +59,13 @@ func defaultProjects() []models.Project {
 		{
 			TypeRu:        "Архитектура и материалы",
 			TypeUz:        "Arxitektura va materiallar",
+			TypeEn:        "Architecture and materials",
 			AreaRu:        "Премиальное качество",
 			AreaUz:        "Premium sifat",
+			AreaEn:        "Premium quality",
 			DescriptionRu: "<h3>ФАСАДЫ</h3><ul><li>Декоративная покраска</li><li>Фрезерованный металл</li><li>Металл под покраску</li><li>Природные оттенки</li><li>Современные формы</li></ul><h3>ОБЩИЕ ЗОНЫ</h3><ul><li>Керамогранит</li><li>Травертин</li><li>Износостойкие материалы</li></ul>",
 			DescriptionUz: "<h3>FASADLAR</h3><ul><li>Dekorativ bo'yash</li><li>Frezerlangan metall</li><li>Bo'yash uchun metall</li><li>Tabiiy ranglar</li><li>Zamonaviy shakllar</li></ul><h3>UMUMIY ZONALAR</h3><ul><li>Keramogranit</li><li>Travertin</li><li>Bardoshli materiallar</li></ul>",
+			DescriptionEn: "<h3>FACADES</h3><ul><li>Decorative paint finish</li><li>Milled metal</li><li>Paint-ready metal</li><li>Natural shades</li><li>Contemporary forms</li></ul><h3>COMMON AREAS</h3><ul><li>Porcelain stoneware</li><li>Travertine</li><li>Durable materials</li></ul>",
 			Image:         "/images/hero/1.png",
 			SortOrder:     1,
 			IsPublished:   true,
@@ -67,10 +73,13 @@ func defaultProjects() []models.Project {
 		{
 			TypeRu:        "Студия",
 			TypeUz:        "Studiya",
+			TypeEn:        "Studio",
 			AreaRu:        "от 28 м²",
 			AreaUz:        "28 m² dan",
+			AreaEn:        "from 28 m²",
 			DescriptionRu: "<p>Уютная студия с панорамными видами — идеальное пространство для молодых профессионалов и пар.</p><ul><li>Панорамные окна</li><li>Высокие потолки 3м</li><li>Функциональная планировка</li><li>Просторная кухня-гостиная</li></ul>",
 			DescriptionUz: "<p>Panoramali ko'rinishga ega qulay studiya — yosh mutaxassislar va juftliklar uchun ideal makon.</p><ul><li>Panoramali derazalar</li><li>3m baland shiftlar</li><li>Funksional rejalashtirish</li><li>Keng oshxona-mehmonxona</li></ul>",
+			DescriptionEn: "<p>A cozy studio with panoramic views, an ideal space for young professionals and couples.</p><ul><li>Panoramic windows</li><li>3-meter-high ceilings</li><li>Functional layout</li><li>Spacious kitchen-living room</li></ul>",
 			Image:         "/images/hero/1.png",
 			SortOrder:     2,
 			IsPublished:   true,
@@ -78,10 +87,13 @@ func defaultProjects() []models.Project {
 		{
 			TypeRu:        "2-комнатная",
 			TypeUz:        "2-xonali",
+			TypeEn:        "2-room apartment",
 			AreaRu:        "от 55 м²",
 			AreaUz:        "55 m² dan",
+			AreaEn:        "from 55 m²",
 			DescriptionRu: "<p>Просторная двухкомнатная квартира с продуманной планировкой для комфортной семейной жизни.</p><ul><li>Раздельные комнаты</li><li>Мастер-спальня</li><li>Балкон с видом</li><li>Гардеробная</li></ul>",
 			DescriptionUz: "<p>Qulay oilaviy hayot uchun o'ylangan rejalashtirishga ega keng ikki xonali kvartira.</p><ul><li>Alohida xonalar</li><li>Asosiy yotoqxona</li><li>Ko'rinishli balkon</li><li>Kiyim xonasi</li></ul>",
+			DescriptionEn: "<p>A spacious two-room apartment with a thoughtful layout for comfortable family living.</p><ul><li>Separate rooms</li><li>Master bedroom</li><li>Balcony with a view</li><li>Walk-in wardrobe</li></ul>",
 			Image:         "/images/hero/1.png",
 			SortOrder:     3,
 			IsPublished:   true,

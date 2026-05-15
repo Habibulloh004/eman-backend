@@ -100,8 +100,10 @@ func (h *GalleryHandler) Get(c *fiber.Ctx) error {
 type CreateGalleryRequest struct {
 	Title         string `json:"title"`
 	TitleUz       string `json:"title_uz"`
+	TitleEn       string `json:"title_en"`
 	Description   string `json:"description"`
 	DescriptionUz string `json:"description_uz"`
+	DescriptionEn string `json:"description_en"`
 	Type          string `json:"type"`
 	URL           string `json:"url"`
 	RedirectURL   string `json:"redirect_url"`
@@ -109,8 +111,10 @@ type CreateGalleryRequest struct {
 	Category      string `json:"category"`
 	HomeSection   string `json:"home_section"`
 	HomeSectionUz string `json:"home_section_uz"`
+	HomeSectionEn string `json:"home_section_en"`
 	HomeDesc      string `json:"home_desc"`
 	HomeDescUz    string `json:"home_desc_uz"`
+	HomeDescEn    string `json:"home_desc_en"`
 	HomeOrder     int    `json:"home_order"`
 	SortOrder     int    `json:"sort_order"`
 	IsPublished   bool   `json:"is_published"`
@@ -129,8 +133,10 @@ func (h *GalleryHandler) Create(c *fiber.Ctx) error {
 	item := models.GalleryItem{
 		Title:         req.Title,
 		TitleUz:       req.TitleUz,
+		TitleEn:       req.TitleEn,
 		Description:   req.Description,
 		DescriptionUz: req.DescriptionUz,
+		DescriptionEn: req.DescriptionEn,
 		Type:          req.Type,
 		URL:           req.URL,
 		RedirectURL:   req.RedirectURL,
@@ -138,8 +144,10 @@ func (h *GalleryHandler) Create(c *fiber.Ctx) error {
 		Category:      req.Category,
 		HomeSection:   req.HomeSection,
 		HomeSectionUz: req.HomeSectionUz,
+		HomeSectionEn: req.HomeSectionEn,
 		HomeDesc:      req.HomeDesc,
 		HomeDescUz:    req.HomeDescUz,
+		HomeDescEn:    req.HomeDescEn,
 		HomeOrder:     req.HomeOrder,
 		SortOrder:     req.SortOrder,
 		IsPublished:   req.IsPublished,
@@ -183,8 +191,10 @@ func (h *GalleryHandler) Update(c *fiber.Ctx) error {
 
 	item.Title = req.Title
 	item.TitleUz = req.TitleUz
+	item.TitleEn = req.TitleEn
 	item.Description = req.Description
 	item.DescriptionUz = req.DescriptionUz
+	item.DescriptionEn = req.DescriptionEn
 	item.Type = req.Type
 	item.URL = req.URL
 	item.RedirectURL = req.RedirectURL
@@ -192,8 +202,10 @@ func (h *GalleryHandler) Update(c *fiber.Ctx) error {
 	item.Category = req.Category
 	item.HomeSection = req.HomeSection
 	item.HomeSectionUz = req.HomeSectionUz
+	item.HomeSectionEn = req.HomeSectionEn
 	item.HomeDesc = req.HomeDesc
 	item.HomeDescUz = req.HomeDescUz
+	item.HomeDescEn = req.HomeDescEn
 	item.HomeOrder = req.HomeOrder
 	item.SortOrder = req.SortOrder
 	item.IsPublished = req.IsPublished
